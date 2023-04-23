@@ -73,6 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   opendatabase();
                 },
+                child: null),
+            ElevatedButton(
+                onPressed: () {
+                  insertintodb();
+                },
                 child: null)
           ],
           // Column is also a layout widget. It takes a list of children and
@@ -105,5 +110,14 @@ class _MyHomePageState extends State<MyHomePage> {
       await db.execute(
           'CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)');
     });
+  }
+
+  Future<void> insertintodb() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'demo.db');
+    print(path);
+    Database db = await openDatabase(path, version: 1);
+    db.rawInsert('INSERT INTO Test(id,name) VALUES(2, "ali masood")');
+    // do the insert and get the id of the inserted row
   }
 }
