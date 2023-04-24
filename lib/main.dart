@@ -73,12 +73,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   opendatabase();
                 },
-                child: null),
+                child: Text("create db and table")),
             ElevatedButton(
                 onPressed: () {
                   insertintodb();
                 },
-                child: null)
+                child: Text("insert into table")),
+            ElevatedButton(
+                onPressed: () {
+                  readdb();
+                },
+                child: Text("select from table"))
           ],
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -102,22 +107,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> opendatabase() async {
     var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'demo.db');
+    String path = join(databasesPath, 'demo2.db');
     print(path);
     Database database = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       // When creating the db, create the table
-      await db.execute(
-          'CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)');
+      await db.execute('CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT)');
     });
   }
 
   Future<void> insertintodb() async {
     var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'demo.db');
+    String path = join(databasesPath, 'demo2.db');
     print(path);
     Database db = await openDatabase(path, version: 1);
     db.rawInsert('INSERT INTO Test(id,name) VALUES(2, "ali masood")');
     // do the insert and get the id of the inserted row
+  }
+
+  Future<void> readdb() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'demo2.db');
+    print(path);
+    Database db = await openDatabase(path, version: 1);
+    List<Map> list = await db.rawQuery('SELECT * FROM Test');
+    print(list);
   }
 }
